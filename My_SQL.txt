@@ -32,3 +32,103 @@ sku varchar(15) unique key,
 price varchar(5),
 sale_price varchar(5)
 )
+
+--------------------------------------
+DML: data manipulation language 
+--------------------------------------
+insert
+update
+delete
+
+
+insert into student values(1,'saed','saed@gmail.com');
+insert into student(id,name)values(2,'vivek');
+
+update student set email='vivek@gmail.com' where id=2;
+
+delete from student where id=1;
+
+-----------------------------------------
+
+DQL = data Query Language 
+
+
+select * from emp;
+select name,phone from emp;
+select distinct(dept) from emp;
+
+select * from emp where dept='IT';
+select * from emp where dept='IT' or dept='HR';
+select * from emp where dept='IT' and sal>70000;
+
+
+select * from emp where dept in ('IT','HR');
+select * from emp where dept not in ('IT','HR');
+
+select * from emp where name like 'an%';
+select * from emp where name like '%a';
+select * from emp where name like '__a%';
+select * from emp where name like '%g%';
+
+
+select * from emp order by name;
+select * from emp order by name desc;
+
+select * from emp limit 10,5;
+select * from emp order by sal desc limit 0,1;
+
+--->Agricat Function
+
+select max(sal) from emp;
+select min(sal) from emp;
+select sum(sal) from emp;
+select avg(sal) from emp;
+select count(*) as total from emp;
+
+select * from emp where sal = (select max(sal) from emp);
+
+select * from emp where sal = (
+
+select max(sal) from emp where sal < (select max(sal) from emp));
+
+select dept,max(sal) from emp group by dept having max(sal)>50000;
+
+-------------------------------------------------------------------------------
+
+TCL = Transaction Control Language 
+
+Commit 
+rollback
+savepoint
+
+start Transaction;
+delete from emp where id = 4;
+savepoint a;
+update emp set age = 33 where id = 2;
+
+Commit;
+rollback to a;
+
+--------------------------------------------------------------------------------
+FOREIGNKEY :
+
+create table author (id int primary key auto_increment,name varchar(20));
+create table book(id int primary key auto_increment,name varchar(20),price double,aid int,foreign key(aid) references author(id));
+
+joins : 
+
+inner 
+outer
+- right
+- left 
+- full
+
+select * from book join author on book.aid=author.id;
+select book.name, author.name from book join author on book.aid=author.id;
+select b.name, a.name from book b join author a on b.aid=a.id;
+
+select b.name, a.name from book b left join author a on b.aid=a.id;
+select b.name, a.name from book b right join author a on b.aid=a.id;
+
+select b.name, a.name from book b left join author a on b.aid=a.id union
+select b.name, a.name from book b right join author a on b.aid=a.id;
