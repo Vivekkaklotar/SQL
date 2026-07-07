@@ -132,3 +132,77 @@ select b.name, a.name from book b right join author a on b.aid=a.id;
 
 select b.name, a.name from book b left join author a on b.aid=a.id union
 select b.name, a.name from book b right join author a on b.aid=a.id;
+
+---------------------------------------------------------------------------------
+view : 
+
+CREATE 
+VIEW `myapp`.`library` AS
+    SELECT 
+        `b`.`name` AS `book`, `a`.`name` AS `author`
+    FROM
+        (`myapp`.`book` `b`
+        LEFT JOIN `myapp`.`author` `a` ON ((`b`.`aid` = `a`.`id`))) 
+    UNION SELECT 
+        `b`.`name` AS `book`, `a`.`name` AS `author`
+    FROM
+        (`myapp`.`author` `a`
+        LEFT JOIN `myapp`.`book` `b` ON ((`b`.`aid` = `a`.`id`)))
+
+---------------------------------------------------------------------------------
+Sp : 
+
+1 : CREATE DEFINER=`root`@`localhost` PROCEDURE `emps`()
+BEGIN
+		select * from emp;
+        select * from emp where dept='IT';
+        select * from emp where age>30;
+END
+
+-call emps
+
+2 : CREATE DEFINER=`root`@`localhost` PROCEDURE `empbyid`(in eid int)
+BEGIN
+		select * from emp where id=eid;
+END
+
+-call empbyid(7);
+
+
+3 : CREATE DEFINER=`root`@`localhost` PROCEDURE `salbyid`(in eid int,out salary double)
+BEGIN
+		select sal into salary from emp where id=eid;
+END
+
+- call salbyid(8,@sal);
+select @sal as salary;
+
+4 : CREATE PROCEDURE `agebyid` (inout sr int)
+BEGIN
+	select age into sr from emp where id=sr;
+END
+
+-set @sr = 8;
+call agebyid(@sr);
+select @sr as age;
+
+---------------------------------------------------------------------------------
+
+trigger : 
+
+
+DELIMITER $$
+
+CREATE TRIGGER emplog1
+BEFORE DELETE ON emp
+FOR EACH ROW
+BEGIN
+   insert into emp_log values(old.id, old.name, old.email,old.phone,old.age, old.sal,old.dept);
+END $$
+
+DELIMITER ;
+
+
+---------------------------------------------------------------------------------
+-----------------------------------------END-------------------------------------
+---------------------------------------------------------------------------------
